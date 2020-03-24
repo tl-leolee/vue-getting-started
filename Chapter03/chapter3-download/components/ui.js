@@ -16,7 +16,7 @@ Vue.component('top-bar', {
 
 Vue.component('card', {
     template: `
-    <div class="card" :class="'type-' + def.type">
+    <div class="card" :class="'type-' + def.type" @click="play">
         <div class="title">{{ def.title }}</div>
         <img class="separator" src="svg/card-separator.svg" /> 
         <div class="description">
@@ -28,4 +28,33 @@ Vue.component('card', {
     </div>
     `,
     props: ['def'],
+    methods: {
+        play() {
+            this.$emit('play')
+        }
+    }
+});
+
+Vue.component('hand', {
+    template: `
+    <div class="hand">
+        <div class="wrapper">
+            <transition-group name="card" tag="div" class="cards">
+                <card v-for="card of cards" :def="card.def" @play="handlePlay(card)" :key="card.uid"/>
+            </transition-group>
+        </div>
+    </div>
+    `,
+    props:['cards'],
+    methods: {
+        handlePlay(card) {
+            this.$emit('card-play', card)
+        }
+    }
+})
+
+Vue.component('overlay', {
+    template: `
+    
+    `
 })

@@ -19,5 +19,7 @@ var state = {
       name:" Willian the Bald"
     }
   ],
-  currentPlayerIndex: Math.round(Math.random())
+  currentPlayerIndex: Math.round(Math.random()),
+  testHand: [],
+  activeOverlay: null,
 }
