@@ -5,15 +5,24 @@
             <img class="img"  src="../assets/logo.svg"/>
         </div>            
         <div>My shirt shop</div>          
-        </header>
-            
-        <!-- Menu will be here -->          
-        <router-view />        
+        </header>      
+        <NavMenu />
+        <router-view></router-view>        
     </div>        
 </template>
 
-<style lang="stylus" scoped>
-@import '../style/main';
+<script>
+import NavMenu from './NavMenu'
+export default {
+    components: {
+        NavMenu
+    }
+}
+</script>
+
+<style lang="stylus">
+@import "../style/main"
+
 .header {
     .img {
         width: 64px;
