@@ -1,3 +1,6 @@
+import state from '../state'
+import router from '../router'
+
 let baseUrl
 
 export default {
@@ -9,13 +12,29 @@ export default {
     }
 }
 
-export async function $fetch(url) {
-    const res = await fetch(`${baseUrl}${url}`)
+export async function $fetch(url, options) {
+    const finalOptions = Object.assign({}, {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    }, options)
+
+    const res = await fetch(`${baseUrl}${url}`, finalOptions)
     if (res.ok) {
         const data = await res.json()
         return data
+    } else if (res.status == 403) {
+        state.user = null
+        if (router.currentRoute.matched.some(r => r.meta.private)) {
+            router.replace({ name: 'login', params: {
+                wantedRoute: router.currentRoute.fullPath,
+            }})
+        }
     } else {
-        const error = new Error(`fetch error for url: ${baseUrl}${url}`)
-        return error
+        const message = await res.text()
+        const error = new Error(message)
+        error.response = res
+        throw error
     }
 }
