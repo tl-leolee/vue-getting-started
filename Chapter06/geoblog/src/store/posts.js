@@ -91,6 +91,7 @@ export default {
       commit("selectedPostDetails", details);
     },
     unselectPost({ commit }) {
+      commit('selectPostId', null)
       commit("selectedPostDetails", null);
     },
     async fetchPosts({ commit, state }, { mapBounds, force }) {

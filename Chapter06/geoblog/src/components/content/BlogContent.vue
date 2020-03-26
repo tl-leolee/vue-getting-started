@@ -29,7 +29,7 @@ export default {
       Content = CreatePost;
     } else {
       Content = PostContent;
-    }
+    } 
     return (
       <div class={this.cssClass}>
         <LocationInfo />

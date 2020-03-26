@@ -8,6 +8,8 @@ import store from "./store";
 import { sync } from "vuex-router-sync";
 import VueGoogleMaps from "vue-googlemaps";
 
+import { GMAP_API_KEY } from './env'
+
 console.log(filters);
 for (const key in filters) {
   Vue.filter(key, filters[key]);
@@ -19,7 +21,7 @@ Vue.use(VueFetch, {
 
 Vue.use(VueGoogleMaps, {
   load: {
-    apiKey: "AIzaSyCE1TMVyv6fXkF8nT0ANsS2z4FutUSK3FM",
+    apiKey: GMAP_API_KEY,
     libraries: ["places"]
   }
 });
