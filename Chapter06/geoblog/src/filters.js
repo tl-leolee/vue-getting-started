@@ -1,5 +1,5 @@
 import moment from "moment";
 
-export default function date(value) {
+export function date(value) {
   return moment(value).format("L");
 }

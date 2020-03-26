@@ -1,27 +1,60 @@
 <template>
   <div class="blog-map">
     <googlemaps-map
+      ref="map"
       :center="center"
       :zoom="zoom"
       :options="mapOptions"
       @update:center="setCenter"
       @update:zoom="setZoom"
-    />
+      @click="onMapClick"
+      @idle="onIdle"
+    >
+      <googlemaps-user-position @update:position="setUserPosition" />
+      <googlemaps-marker
+        v-if="draft"
+        :clickable="false"
+        :label="{
+          color: 'white',
+          fontFamily: 'Material Icons',
+          text: 'add_circle'
+        }"
+        :opacity="0.75"
+        :position="draft.position"
+        :z-index="6"
+      />
+
+      <googlemaps-marker
+        v-for="post of posts"
+        :key="post._id"
+        :label="{
+          color: post === currentPost ? 'white' : 'black',
+          fontFamily: 'Material Icons',
+          fontSize: '20px',
+          text: 'face'
+        }"
+        :position="post.position"
+        :z-index="5"
+        @click="selectPost(post._id)"
+      />
+    </googlemaps-map>
   </div>
 </template>
 
 <script>
+import { createNamespacedHelpers } from "vuex";
+const {
+  mapGetters: mapsGetters,
+  mapActions: mapsActions
+} = createNamespacedHelpers("maps");
+const {
+  mapGetters: postsGetters,
+  mapActions: postsActions
+} = createNamespacedHelpers("posts");
 export default {
-  data() {
-    return {
-      center: {
-        lat: 43.825955,
-        lng: -79.3057711
-      },
-      zoom: 15
-    };
-  },
   computed: {
+    ...mapsGetters(["center", "zoom", "userPosition"]),
+    ...postsGetters(["draft", "posts", "currentPost"]),
     mapOptions() {
       return {
         fullscreenControl: false
@@ -29,11 +62,16 @@ export default {
     }
   },
   methods: {
-    setCenter(value) {
-      this.center = value;
+    ...mapsActions(["setCenter", "setZoom", "setUserPosition", "setBounds"]),
+    ...postsActions(["setDraftLocation", "selectPost"]),
+    onMapClick(e) {
+      this.setDraftLocation({
+        position: e.latLng,
+        placeId: e.placeId
+      });
     },
-    setZoom(value) {
-      this.zoom = value;
+    onIdle() {
+      this.setBounds(this.$refs.map.getBounds());
     }
   }
 };

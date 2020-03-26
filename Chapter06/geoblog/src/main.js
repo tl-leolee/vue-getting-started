@@ -8,6 +8,7 @@ import store from "./store";
 import { sync } from "vuex-router-sync";
 import VueGoogleMaps from "vue-googlemaps";
 
+console.log(filters);
 for (const key in filters) {
   Vue.filter(key, filters[key]);
 }

@@ -3,10 +3,17 @@ import Vuex from "vuex";
 import { $fetch } from "../plugins/fetch";
 import router from "../router";
 
+import maps from "./maps";
+import posts from "./posts";
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== "production",
+  modules: {
+    maps,
+    posts
+  },
   state() {
     return {
       user: null
@@ -39,6 +46,7 @@ const store = new Vuex.Store({
           router.replace(
             router.currentRoute.params.wantedRoute || { name: "home" }
           );
+          this.dispatch("logged-in");
         }
       } catch (e) {
         console.warn(e);
@@ -46,7 +54,7 @@ const store = new Vuex.Store({
     },
     logout({ commit }) {
       commit("user", null);
-      $fetch("logout");
+      $fetch("/logout");
       if (router.currentRoute.matched.some(r => r.meta.private)) {
         router.replace({
           name: "login",
